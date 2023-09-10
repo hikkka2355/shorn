@@ -1,0 +1,60 @@
+<div class="ribbon2">
+  <h1>Welcome to My golden life!</h1>
+</div>
+<div class="photo">
+<h1></h1>
+</div>
+<%= stylesheet_link_tag 'index', :media => "all" %>
+<h3>一覧ページ</h3>
+<% if user_signed_in? %>
+  <% if current_user == @user || current_user.admin? %>
+    <%= link_to "新規投稿へ", new_pixar_path %>
+  <% end %>
+<% end %>
+<%= page_entries_info @pixars %>
+<%= paginate @pixars %>
+<div class="pixars-container">
+  <% @pixars.each do |t| %>
+    <div class="pixar">
+      <%= image_tag t.image_url, size: "250x200" if t.image? %>
+      <%= t.user.email %> 
+      <%= t.name %>
+      <%= t.main %>
+      <%= t.mouse %>
+      <% if user_signed_in? %>
+        <% if current_user.already_liked?(t) %>
+            <%= link_to pixar_like_path(id: t.id, pixar_id: t.id), method: :delete do %>
+                <p>いいねを取り消す</p><%= t.likes.count %>
+            <% end %>
+        <% else %>
+            <%= link_to pixar_likes_path(id: t.id, pixar_id: t.id), method: :post do %>
+                <p>いいね</p><%= t.likes.count %>
+            <% end %>
+        <% end %>
+      <% else %>
+        <p>いいねの数 = </p><%= t.likes.count %>
+      <% end %>
+
+      <%= link_to "詳細へ", pixar_path(t.id) %>
+
+      <% if user_signed_in? && current_user.id == t.user_id %>
+        <%= link_to "編集する", edit_pixar_path(t.id) %>
+        <%= button_to "削除する", pixar_path(t.id), method: :delete %> 
+      <% end %> 
+    </div>
+  <% end %> 
+<h4>いいね！ランキング</h4>  
+  <% @rank_pixars.each do |t| %>
+    <div class="pixar1">
+        <%= image_tag t.image_url, size: "250x200" if t.image? %>
+        <%= t.user.email %> 
+        <%= t.name %>
+        <%= t.main %>
+        <%= t.mouse %>
+        <%= t.video %>
+        <p>いいねの数 = </p><%= t.likes.count %>
+    </div>
+    <p class="time"><%= t.created_at %></p>
+    </div>
+    <% end %>
+</div>

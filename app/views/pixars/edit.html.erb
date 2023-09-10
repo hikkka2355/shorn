@@ -1,0 +1,39 @@
+<%= stylesheet_link_tag 'pixars', :media => "all" %>
+<%= link_to "一覧ページへ",  pixars_path %>
+<%= form_for @pixar do |f| %>
+  
+    <div class="vegetable">
+    <%= image_tag "vegetarians" %>
+    </div>
+    
+    <div class="field">
+      <%= f.label :タイトル %>
+      <%= f.text_field :name, :size => 30 %>
+    </div>
+     
+     <div class="field">
+     <%= f.label :画像 %>
+     <%= f.file_field :image, :size => 30 %>
+   </div>
+    
+        
+    <div class="field">
+      <%= f.label :動画 %>
+      <%= f.file_field :video, :accept => 'video/*' %>
+    </div>
+
+
+    <div class="field">
+      <%= f.label :本文 %>
+      <%= f.text_area :main, :size => "30x2" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :備考欄  %>
+      <%= f.text_area :mouse, :size => "30x2" %>
+    </div> 
+
+   <%= f.submit "編集する" %>
+<% end %>
+<%= link_to "Pixar一覧に戻る", pixars_path %>
+<%= link_to "編集する", edit_pixar_path(@pixar.id) %>

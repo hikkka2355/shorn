@@ -1,0 +1,61 @@
+<%= stylesheet_link_tag 'pixars', :media => "all" %>
+<h1>My Golden Life</h1>
+<h3>Pixar詳細</h3>
+
+<%= link_to "一覧ページへ",  pixars_path %>
+
+<div class="sea">
+<%= image_tag "OIP" %>
+</div>
+<div class="pixar">
+  <p><%= @pixar.main %></p>
+  <p><%= @pixar.name %></p>
+  <p><%= @pixar.mouse %></p>
+  <p><%= image_tag @pixar.image_url, size: "250×200" if @pixar.image? %></p>
+  <%= link_to @pixar.video_url.to_s do %>
+    <%= video_tag(@pixar.video.to_s, controls:true, controlslist: 'nodownload', size: "700x300") if @pixar.video?%>
+   <% end %>
+  <p><%= @pixar.created_at %></p>
+  <p><%= @pixar.updated_at %></p>
+</div>
+<% if user_signed_in? %>
+      <% if current_user.already_liked?(@pixar) %>
+        <%= link_to pixar_like_path(@pixar), method: :delete do %>
+          <i class="far fa-heart"></i><%= @pixar.likes.count %>  
+    
+        <% end %>
+      <% else %>
+        <%= link_to pixar_likes_path(@pixar), method: :post do %>
+          <i class="far fa-heart"></i><%= @pixar.likes.count %>  
+        <% end %>
+      <% end %>
+    <% else %>
+    <i class="far fa-heart"></i><%= @pixar.likes.count %>  
+    <% end %>
+    <h2>いいねしたユーザー</h2>
+<% @pixar.liked_users.each do |user| %>
+  <li><%= user.email %></li>
+<% end %>
+
+<div class="comment-wrapper">
+  <p>コメント一覧</p>
+  <% @comments.each do |c| %>
+    <div>
+      <%= c.user.email unless c.user.blank? %>
+      <br>
+      <%= c.content %>
+    </div>
+      <br>
+  <% end %>
+
+  <% if user_signed_in? %>
+    <%= form_with(model: [@pixar, @comment], local: true) do |f| %>
+      <%= f.text_area :content %>
+      <%= button_tag type: "submit" do %>
+        <i class="far fa-comments"></i> コメントする
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+<%= link_to "Pixar一覧に戻る", pixars_path %>
+<%= link_to "編集する", edit_pixar_path(@pixar.id) %>
