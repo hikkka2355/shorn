@@ -1,0 +1,22 @@
+databases:
+  - name: Shorn_DB
+    databaseName: shorn_db
+    user: Shorn
+    region: singapore
+
+services:
+  - type: web
+    name: Shorn
+    env: ruby
+    region: singapore
+    plan: free
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: Shorn_DB
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+
